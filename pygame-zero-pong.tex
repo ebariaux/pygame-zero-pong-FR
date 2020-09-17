@@ -1,0 +1,422 @@
+\documentclass[11pt]{article}
+\synctex=1
+\usepackage{graphicx}
+\usepackage[utf8x]{inputenc}
+\usepackage[frenchb]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, inner=2cm, outer=4.9cm, marginparwidth=3.9cm, marginparsep=0.5cm]{geometry}
+\usepackage[factor=1000]{microtype}     %awesome package to deal with text spacing, special char in margin...
+\usepackage{lmodern}                    %best font for latex (latin modern is derived from computer modern)
+\usepackage{amssymb,array}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{xspace}
+\usepackage{color}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{upquote}
+\usepackage{framed}
+\usepackage{marginnote}
+\usepackage{ragged2e}
+\usepackage{hyperref}
+
+\author{CoderDojo Seneffe}
+
+\title{Réalisation du jeu Pong avec Python3, Pygame Zero et Mu}
+\date{Février 2020}
+
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.7,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\definecolor{deepgray}{rgb}{0.4,0.4,0.4}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
+\renewcommand{\familydefault}{\sfdefault}
+\lstset{language=Python,
+texcl=true,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},
+commentstyle=\ttb\color{deepgray},
+showstringspaces=false            %
+}
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{0.5em}
+
+\newcommand{\trad}[1]{\marginnote{\textcolor{deepblue}{#1}}}
+
+\usetikzlibrary{turtle}
+
+\begin{document}
+
+\maketitle
+
+Pendant cette session,\trad{\RaggedRight Retrouve les traductions anglais~$\rightarrow$~français dans cette marge.}
+nous allons découvrir comment créer un jeu Pong avec Python.
+Pong est un des premiers jeux vidéos. Il a été créé en 1972.
+Si tu ne connais pas Pong, voici une vidéo du jeu: \url{https://www.youtube.com/watch?v=it0sf4CMDeM}.
+
+Pour créer notre jeu de Pong, nous allons utiliser Pygame Zero, une bibliothèque qui facilite la création de jeu avec Python,
+ainsi que Mu, un environnement de programmation (IDE) pour écrire et exécuter notre programme.
+Pygame Zero va nous permettre de gérer facilement les images, le clavier et les sons pour nous concentrer sur la programmation du jeu.
+
+Attention, Pygame Zero est différent (et plus simple) que Pygame. Si tu cherches des exemples sur internet, il faut bien faire la différence.
+
+\section{Installation de Mu}
+
+Si Mu n'est pas déjà installé sur ton ordinateur, tu peux le télécharger sur \url{https://codewith.mu/en/download}.\\
+Il n'est pas nécessaire d'installer Pygame Zero, cela est compris lorsque tu installes Mu.\\
+Sur Windows et Mac, il n'est pas nécessaire non plus d'installer Python.
+
+\section{Hello World}
+
+\begin{enumerate}
+    \item Si tu ne l'as pas déjà fait, ouvre Mu, tu devrais voir un fichier vide. Si ce n'est pas le cas, tu peux créer un nouveau fichier en cliquant sur \texttt{New}.
+    
+    \item Mu dispose de plusieurs modes en fonction de ce que tu veux faire comme type de programme. On va commencer par un exemple de Python "simple", sans Pygame Zero. Clique sur \texttt{Mode} et choisi \texttt{Python 3}.
+
+    \item Tape le code suivant dans le fichier :
+\begin{lstlisting}
+print("Hello World !")
+\end{lstlisting}
+
+    \item Clique sur \texttt{Run} ou \texttt{Lancer} pour lancer ton programme, tu devras choisir un nom pour sauvegarder celui-ci.
+\end{enumerate}
+
+Que se passe-t-il~?
+
+Félicitations~! Tu viens d'écrire ton premier programme en Python.
+Tu peux modifier la ligne de code pour faire dire ce que tu veux à ton programme.
+
+\begin{framed}
+Petite astuce~:~pour chaque étape de cette session, utilise un fichier différent.
+Ça te permettra de garder une trace de ce que tu as fait.
+C'est pratique pour se souvenir de comment tu as fait les choses~!
+\end{framed}
+
+\section{Bonjour Pygame Zero}
+
+Maintenant, jouons avec Pygame Zero. Pour cela on va changer de mode dans Mu. Clique sur \texttt{Mode} et choisi \texttt{Pygame Zero}.
+
+Nous allons commencer par afficher la fenêtre dans laquelle le jeux se déroulera et en colorier le fond en vert.
+
+\begin{lstlisting}
+WIDTH = 200
+HEIGHT = 200
+
+def draw():
+    screen.fill((0, 255, 0))
+\end{lstlisting}
+\marginnote{\textcolor{deepblue}{WIDTH~=~largeur\\HEIGHT~=~hauteur}}[-7em]
+\marginnote{\textcolor{deepblue}{draw~=~dessiner\\screen~=~écran\\fill~=~remplir}}[-3.5em]
+
+\begin{enumerate}
+    \item Clique sur \texttt{New} ou \texttt{Nouveau} pour créer un nouveau fichier.
+
+    \item Recopie le programme ci-dessus dans l'éditeur.
+    
+    \item Clique sur \texttt{Play} ou \texttt{Jouer} pour exécuter le programme. Tu devras donner un nom à ton fichier si ce n'est pas déjà fait, par exemple \texttt{Pong1}.
+
+          Une fenêtre s'est-elle ouverte~?
+          Le fond est-il vert~?
+
+    \item Peux-tu changer la taille de la fenêtre et la couleur du fond ?
+\end{enumerate}
+
+\subsection*{Quelques explications}
+
+Pygame Zero te simplifie la vie au maximum et a déjà programmé toute une série de choses pour toi, comme par exemple ouvrir une fenêtre pour ton jeu. Si tu ne précise rien, Pygame Zero décide de la taille de la fenêtre.\\
+Mais il te donne la possibilité de choisir toi même la taille à travers des variables (\lstinline{WIDTH} et \lstinline{HEIGHT}).\\
+En assignant une valeur à ces variables au début du programme, c'est toi qui choisi la taille de la fenêtre.
+
+Pygame Zero sait aussi quand il est nécessaire de dessiner dans la fenêtre et quand c'est le cas, il te demande de le faire en appelant \lstinline{draw()}.\\
+Tu dois donc définir une fonction portant le nom de \lstinline{draw} et y inclure le code qui va dessiner à l'écran.\\
+C'est ce que le mot clé \lstinline{def} indique (\lstinline{def} pour define, qui veut dire définir en français).\\
+Attention à ne pas oublier les parenthèses après le nom de ta fonction.\\
+Les fonctions peuvent prendre des paramètres, qu'on défini entre les parenthèses, mais même quand il n'y a aucun paramètre, les parenthèses sont nécessaires.
+\\
+
+\section{Le positionnement des objects}
+
+Avant de faire apparaître la balle, il est important de savoir comment
+sont positionnés les éléments sur l'écran.
+La position de chaque élément est définie par des coordonnées x et y.
+
+\begin{center}
+\begin{tikzpicture}[x=0.01cm,y=0.01cm]
+
+    \draw[very thick] (0, 0) -- (0, 720) -- (960, 720) -- (960, 0) -- cycle ;
+    \node[deepred, above=3mm] at (0, 720) {\lstinline{x=0} et \lstinline{y=0}};
+    \node[deepred, above=3mm] at (960, 720) {\lstinline{x=WIDTH}\trad{width~=~largeur} et \lstinline{y=0}};
+    \node[deepred, below=3mm] at (0, 0) {\lstinline{x=0} et \lstinline{y=HEIGHT}};
+    \node[deepred, below=3mm] at (960, 0) {\lstinline{x=WIDTH} et \lstinline{y=HEIGHT}\trad{height~=~hauteur}};
+
+    \foreach \corner in {(0,0), (0, 720), (960, 720), (960, 0)}{
+        \fill[deepred] \corner circle (0.2cm);
+    }
+
+    \draw[very thick, deepred, ->] (40, 680) -- (40,40);
+    \draw[very thick, deepred, ->] (40, 680) -- (920,680);
+
+    \node[very thick, anchor=north, deepred] at (880,680) {\textbf{X}};
+    \node[very thick, anchor=west, deepred] at (40,80) {\textbf{Y}};
+
+\end{tikzpicture}
+\end{center}
+
+\begin{description}
+    \item[L'axe horizontal (X)] va de gauche à droite.
+    Sur le bord gauche de la fenêtre, il a la valeur 0.
+    Sur le bord droit de la fenêtre, il a la valeur \lstinline{WIDTH},
+    qui est la largeur de la fenêtre.
+    
+    \item[L'axe vertical (Y)] va de haut en bas.
+    Sur le bord supérieur de la fenêtre, il a la valeur 0.
+    Sur le bord inférieur de la fenêtre, il a la valeur \lstinline{HEIGHT},
+    qui est la hauteur de la fenêtre.
+\end{description}
+
+\begin{enumerate}
+    \item Double-clique sur le nom du fichier pour lui donner un nouveau nom, par exemple \texttt{Pong2}.
+
+    \item Modifie ton fichier de la façon suivante:
+    \marginnote{\textcolor{deepblue}{Actor~=~acteur\\center~=~centre}}[5.5em]
+    \marginnote{\textcolor{deepblue}{clear~=~effacer}}[10.5em]
+\begin{lstlisting}
+WIDTH = 800
+HEIGHT = 600
+
+balle = Actor('ball.png')
+balle.center = 400, 300
+
+def draw():
+    screen.clear()
+    balle.draw()
+\end{lstlisting}
+
+    \item Clique sur \texttt{Play} ou \texttt{Jouer} pour exécuter le programme.
+
+    \item La balle est-elle affichée au milieu de l'image?
+    Peux-tu placer la balle à un autre endroit en modifiant le code?
+\end{enumerate}
+
+\section{La position des bords de la balle}
+\label{position}
+
+\begin{center}
+\begin{tikzpicture}[x=6.5cm,y=6.5cm]
+
+    \node[above right, inner sep=0] at(0,0) {\includegraphics[width=6.5cm]{images/ball.png}};
+    \draw[very thick] (0,0) rectangle (1,1);
+    
+    \draw[very thick] (0.47, 0.5) -- (0.53, 0.5);
+    \draw[very thick] (0.5, 0.47) -- (0.5, 0.53);
+
+    \node[left] at (0, 0.5) {\lstinline{balle.left}};
+    \node[right] at (1, 0.5) {\lstinline{balle.right}\trad{left~=~gauche\\right~=~droite}};
+    \node[above] at (0.5, 1) {\lstinline{balle.top}\trad{top~=~le dessus}};
+    \node[below] at (0.5, 0) {\lstinline{balle.bottom}\trad{bottom~=~le bas}};
+    \node[above=0.2cm, text width=3.6cm] at (0.5, 0.5) {\lstinline{balle.centerx}\trad{center~=~centre}\\\lstinline{balle.centery}};
+    
+    
+\end{tikzpicture}
+\end{center}
+
+\begin{description}
+    \item[Le bord gauche] de la balle sur l'axe X est \lstinline{balle.left}.
+    \item[Le bord droit] de la balle sur l'axe X est \lstinline{balle.right}.
+    \item[Le bord supérieur] de la balle sur l'axe Y est \lstinline{balle.top}.
+    \item[Le bord inférieur] de la balle sur l'axe Y est \lstinline{balle.bottom}.
+    \item[Le centre] de la balle sur l'axe X est \lstinline{balle.centerx}.
+    \item[Le centre] de la balle sur l'axe Y est \lstinline{balle.centery}.
+\end{description}
+
+
+\section{Un peu de mouvement}
+
+Il est temps de faire bouger la balle.
+
+\begin{enumerate}
+    \item Double-clique sur le nom du fichier pour lui donner un nouveau nom, par exemple Pong3.
+    \item Modifie ton fichier de la façon suivante:
+    \marginnote{\textcolor{deepblue}{update~=~mettre à jour}}[17.75em]
+\begin{lstlisting}
+WIDTH = 800
+HEIGHT = 600
+
+balle = Actor('ball.png')
+balle.center = 400, 300
+
+vitesse_x = 10
+vitesse_y = 10
+
+def draw():
+    screen.clear()
+    balle.draw()
+
+def update():
+    global vitesse_x, vitesse_y
+
+    balle.left = balle.left + vitesse_x
+    balle.top = balle.top + vitesse_y
+\end{lstlisting}
+
+    \item Clique sur \texttt{Play} ou \texttt{Jouer} pour exécuter le programme.
+
+    \item La balle sort assez vite de la fenêtre.
+    Comment faire pour garder la balle dans la fenêtre?
+    Comment détecter que la balle touche un bord?
+\end{enumerate}
+
+Par défaut, Pygame Zero cherche les images dans le folder \texttt{images}. Fais bien attention à placer tes fichiers image (par exemple \texttt{ball.png}) à cet endroit.
+
+\subsection*{Quelques explications}
+
+On a vu plus haut que Pygame Zero appelait la fonction \lstinline{draw()} pour te donner la possibilité de dessiner. Ici il appelle la fonction \lstinline{update()} pour te donner la possibilité de mettre à jour l'état de ton jeu (pour par exemple déplacer des objets).
+
+\section{La balle rebondi sur les bords}
+
+Quand la balle sort de la fenêtre en bas,
+\lstinline{balle.bottom} est plus grand que \lstinline{HEIGHT} (la hauteur de la fenêtre).
+Il faut alors inverser le sens de déplacement vertical (\lstinline{vitesse_y}) de la balle pour qu'elle remonte.
+Voici un bout de code qui fait ça.
+
+\begin{lstlisting}
+if balle.bottom > HEIGHT:
+    vitesse_y = -vitesse_y
+\end{lstlisting}
+
+\begin{enumerate}
+    \item Place le code ci-dessus au bon endroit et relance ton programme.
+    \item Fais la même chose pour les autres bords.
+    \item Ta balle reste-t-elle dans ta fenêtre?
+\end{enumerate}
+
+Après ces étapes, la balle se balade dans l'écran en rebondissant sur les bords.
+On va maintenant ajouter les raquettes pour les joueurs.
+
+\section{Ajout des raquettes des joueurs}
+
+On va simplement utiliser des rectangles rouges pour les raquettes.
+
+Voici un exemple de code pour créer une raquette et la placer au bord de l'écran:
+\marginnote{\textcolor{deepblue}{filled~=~rempli}}[6.75em]
+
+\begin{lstlisting}
+raquette = Rect(10, 10, 10, 100)
+
+def draw():
+    screen.clear()
+    screen.draw.filled_rect(raquette, (255, 0, 0))
+\end{lstlisting}
+
+Les paramètres de \lstinline{Rect()} sont la position horizontale, la position verticale, la largeur et la hauteur.\\
+Les paramètres de \lstinline{filled_rect()} sont le rectangle à dessiner et la couleur à utiliser.
+\\
+\\
+
+\begin{enumerate}
+    \item En t'inspirant du code ci-dessus, ajoute une raquette dans ton programme.
+    \item Modifie-le pour mettre une raquette de chaque côté de l'écran (choisi un nom parlant pour tes variables).
+    \item Exécute ton programme. Les raquettes sont-elles où tu veux les mettre?
+    \item Amuse-toi à changer leurs tailles et leurs couleurs.
+\end{enumerate}
+
+\section{Déplacement des raquettes avec le clavier}
+
+Pygame Zero permet de savoir quelles sont les touches du clavier qui sont pressées.
+Ça va te permettre de déplacer les raquettes en fonction des touches sur lesquelles tu appuies.
+
+Le code ci-dessous permet de savoir quand les flèches du haut et du bas sont pressées.
+\marginnote{\textcolor{deepblue}{keyboard~=~clavier\\down~=~bas}}[2.5em]
+
+\begin{lstlisting}
+# Regarde si la flèche du bas est pressée
+if keyboard.down:
+    # Ici, il faut déplacer la raquette
+# Regarde si la flèche du haut est pressée
+if keyboard.up:
+    # Ici, il faut déplacer la raquette
+\end{lstlisting}
+\marginnote{\textcolor{deepblue}{up~=~haut}}[-2.75em]
+
+Tu peux aussi utiliser \lstinline{keyboard.w} ou \lstinline{keyboard.a} pour savoir quand les touches \texttt{w} et \texttt{a} sont pressées.
+
+\begin{enumerate}
+    \item Utilise le code ci-dessus dans ton programme pour déplacer les raquettes (indice: on déplace la raquette dans la fonction \texttt{update()}).
+    \item Exécute ton programme. Les raquettes se déplacent-t-elles assez vite? Trop vite?
+    \item Adapte la vitesse à ton envie.
+    \item Que se passe-t-il si tu laisses ton doigt sur la flèche du haut pendant longtemps ? Modifie le programme pour que les raquettes restent toujours dans l'écran.
+\end{enumerate}
+
+\section{Collision entre les raquettes et la balle}
+
+Il faut maintenant détecter quand ta balle touche une raquette pour la faire changer de direction.
+
+La balle (un Actor) peut détecter si elle entre en collision avec un rectangle en utilisant la fonction \lstinline{colliderect()}.
+
+Modifie le programme pour détecter une collision entre la balle et une raquette et changer la direction de la balle.
+
+Les coachs seront là pour t'aider à trouver une solution.
+N'hésite pas à poser des questions.
+
+\section{Que faire quand le joueur ne touche pas la balle ?}
+
+Pour l'instant, si le joueur ne touche pas la balle avec la raquette, elle rebondit encore sur le bord de l'écran. Ce n'est pas très intéressant comme jeu.
+
+Modifie le programme pour que la balle revienne au centre de l'écran quand un joueur ne la touche pas avec sa raquette.
+
+\section{Pour aller plus loin}
+
+Voici quelques idées pour aller encore plus loin dans ton jeu:
+\begin{enumerate}
+    \item Compte les points et affiche les en haut de l'écran.
+    \item Ajoute un son quand la balle touche la raquette.
+    \item Quand la balle revient au centre de l'écran, sa position verticale est choisie au hasard.
+    \item Chaque fois qu'un joueur marque 5 points, la balle accélère.
+\end{enumerate}
+
+Pour cela, tu auras besoin des éléments suivants:
+
+\subsection*{Afficher du texte à l'écran}
+
+Le morceau de code suivant permet d'afficher le texte 'Bonjour' à l'écran. Le deuxième paramètre représente la position du coin supérieur gauche du texte.
+
+\begin{lstlisting}
+screen.draw.text('Bonjour', (0,0))
+\end{lstlisting}
+
+\subsection*{Convertir un nombre en texte}
+
+Les variables en Python ont un type, un nombre ce n'est pas la même chose que du texte (ou chaîne de caractères, string en anglais). Si tu as une variable qui contient un nombre et que tu veux la transformer en chaîne de caractères, utilise la fonction \lstinline{str()} comme dans l'exemple ci-dessous.
+
+\begin{lstlisting}
+nombre = 10
+texte = str(nombre)
+\end{lstlisting}
+
+\subsection*{Jouer une note}
+
+Pygame Zero offre une fonction pour jouer une note de musique, telle que montré dans le code ci-dessous. Le premier paramètre est la fréquence de la note en Hertz (c'est sa hauteur, un plus petit nombre donne une note plus grave, un plus grand nombre une note plus aiguë), le second paramètre indique la durée de la note en seconde.
+
+\begin{lstlisting}
+tone.play(100, 0.1)
+\end{lstlisting}
+
+\subsection*{Choisir un nombre au hasard}
+
+Python offre une fonction pour choisir un nombre entier au hasard: \lstinline{randint()}, celle-ci accepte 2 paramètres indiquant l'interval dans lequel les nombres sont générés (le plus petit et le plus grand nombre possible). Attention, cette fonction se trouve dans un module séparé, qu'il faut importer dans le programme, comme le montre le code ci-dessous.
+
+\begin{lstlisting}
+import random
+
+print(random.randint(0, 10))
+\end{lstlisting}
+
+\end{document}
